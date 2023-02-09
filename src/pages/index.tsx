@@ -51,6 +51,12 @@ let ListOfTodos = ({todos, handleDeleteTodo, handleTodoCheck, title}: {todos: an
   )
 }
 
+let ListActionButton = ({onClick, title}: {onClick: any, title: string}) => {
+  return (
+    <button className="bg-white text-lg font-semibold p-4 rounded-full self-start hover:bg-[#3c1a7f] hover:text-white" onClick={onClick} >{title}</button>
+  );
+}
+
 const Home: NextPage = () => {
   //const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
@@ -93,6 +99,12 @@ const Home: NextPage = () => {
     setTodos(newTodos);
   }
 
+  const clearAllCompletedTodos = () => {
+    const newTodos = todos.filter((todo) => todo.completed === false);
+    setTodos(newTodos);
+  }
+  
+
   return (
     <>
       <Head>
@@ -106,8 +118,11 @@ const Home: NextPage = () => {
             TODOS
           </h1>
           <TodoInput handleAddTodo={handleAddTodo} />
-          <hr className="border w-full opacity-50"></hr>
-          <button className="bg-white text-lg font-semibold p-4 rounded-full self-start hover:bg-[#3c1a7f] hover:text-white" onClick={handleCompleteAllTodos} >Complete all</button>
+          <div className="flex flex-row gap-2 flex-start w-full">
+            <ListActionButton onClick={handleCompleteAllTodos} title="Complete All" />
+            <ListActionButton onClick={clearAllCompletedTodos} title="Clear Completed" />
+          </div>
+          
           {uncompletedTodos.length > 0 && <ListOfTodos 
             todos={uncompletedTodos} 
             handleDeleteTodo={handleDeleteTodo} 
