@@ -37,6 +37,14 @@ const Home: NextPage = () => {
     setTodos(newTodos);
   }
 
+  const handleCompleteAllTodos = () => {
+    const newTodos = todos.map((todo) => {
+      todo.completed = true;
+      return todo;
+    });
+    setTodos(newTodos);
+  }
+
   return (
     <>
       <Head>
@@ -55,7 +63,8 @@ const Home: NextPage = () => {
 
             <input className="bg-white text-[#3c1a7f] shadow-md rounded px-6 text-lg font-semibold cursor-pointer hover:bg-[#3c1a7f] hover:text-white" type="submit" value="Submit" />
           </form>
-          <hr></hr>
+          <hr className="border w-full opacity-50"></hr>
+          <button className="bg-white text-lg font-semibold p-4 rounded-full self-start hover:bg-[#3c1a7f] hover:text-white" onClick={handleCompleteAllTodos} >Complete all</button>
           <div className="container flex flex-col">
             {todos.map((todo) => {
               return (
