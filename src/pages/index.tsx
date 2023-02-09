@@ -1,11 +1,26 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 
 import { api } from "../utils/api";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+
+  let [todos, setTodos] = useState([{ id: 1, text: "todo 1", completed: false }, { id: 2, text: "todo 2", completed: false}]);
+
+  const handleAddTodo = (e: any) => {
+    e.preventDefault();
+    console.log(e.target.value)
+    const newTodo = {
+      id: todos.length + 1,
+      text: e.target.elements.todoInput.value,
+      completed: false
+    }
+    setTodos([...todos, newTodo]);
+    e.target.reset();
+  }
 
   return (
     <>
@@ -19,15 +34,21 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             TODOS
           </h1>
-          <input type="text" placeholder="What do you need to get done?" className="w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-lg shadow-md" />
+          <form className="w-full flex flex-row gap-4" onSubmit={handleAddTodo} >
+            <label htmlFor="todoInput" className="sr-only">Todo input</label>
+            <input id="todoInput" type="text" placeholder="What do you need to get done?" className="w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-lg shadow-md" />
+            <input className="bg-white text-[#3c1a7f] shadow-md rounded px-6 text-lg font-semibold cursor-pointer hover:bg-[#3c1a7f] hover:text-white" type="submit" value="Submit" />
+          </form>
           <hr></hr>
           <div className="container flex flex-col">
-            {[1,2,3,4].map((_, i) => {
+            {todos.map((todo, i) => {
               return (
-                <div className="flex items-center justify-between w-full p-4 mb-4 text-lg font-semibold text-white bg-[#3c1a7f] hover:bg-[#4A11B2] rounded-lg shadow-md cursor-pointer">
-                    <div>
-                      <input id={`todo ${i}`} type="checkbox" className="mr-4 w-4 h-4 rounded-xl bg-[#3c1a7f]  border cursor-pointer" />
-                      <label htmlFor={`todo ${i}`}>TODO {i}</label>
+                <div 
+                key={todo.id}
+                className="flex items-center justify-between w-full p-4 mb-4 text-lg font-semibold text-white bg-[#3c1a7f] hover:bg-[#4A11B2] rounded-lg shadow-md cursor-pointer">
+                    <div className="flex flex-row">
+                      <input id={`todo ${todo.id}`} type="checkbox" className="appearance-none mt-1 mr-4 w-4 h-4 rounded-xl bg-[#3c1a7f] checked:bg-white ring-white ring-2 cursor-pointer "></input>
+                      <label className="" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
                     </div>
                     <span className="text-2xl font-bold hover:text-red-500 ">X</span>
                 </div>
