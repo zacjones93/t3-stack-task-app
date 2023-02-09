@@ -26,6 +26,17 @@ const Home: NextPage = () => {
     setTodos(newTodos);
   }
 
+  const handleTodoCheck = (id: number) => {
+    console.log(id)
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        todo.completed = !todo.completed;
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  }
+
   return (
     <>
       <Head>
@@ -40,23 +51,33 @@ const Home: NextPage = () => {
           </h1>
           <form className="w-full flex flex-row gap-4" onSubmit={handleAddTodo} >
             <label htmlFor="todoInput" className="sr-only">Todo input</label>
-            <input id="todoInput" type="text" placeholder="What do you need to get done?" className="w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-lg shadow-md" />
+            <input id="todoInput" type="text" placeholder="What do you need to get done?" className="w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-lg shadow-md focus:outline-white" />
+
             <input className="bg-white text-[#3c1a7f] shadow-md rounded px-6 text-lg font-semibold cursor-pointer hover:bg-[#3c1a7f] hover:text-white" type="submit" value="Submit" />
           </form>
           <hr></hr>
           <div className="container flex flex-col">
-            {todos.map((todo, i) => {
+            {todos.map((todo) => {
               return (
-                <div 
-                key={todo.id}
-                className="flex items-center justify-between w-full p-4 mb-4 text-lg font-semibold text-white bg-[#3c1a7f] hover:bg-[#4A11B2] rounded-lg shadow-md cursor-pointer">
-                    <div className="flex flex-row">
-                      <input id={`todo ${todo.id}`} type="checkbox" className="appearance-none mt-1 mr-4 w-4 h-4 rounded-xl bg-[#3c1a7f] checked:bg-white ring-white ring-2 cursor-pointer "></input>
-                      <label className="" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
-                    </div>
-                    <span className="text-2xl font-bold hover:text-red-500" 
-                      onClick={() => handleDeleteTodo(todo.id)}
-                    >X</span>
+                <div className="flex flex-row mb-4 group">
+                  <div 
+                  key={todo.id}
+                  className="flex items-center justify-between w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-l-lg shadow-md cursor-pointer group-hover:bg-[#4A11B2]"
+                  onClick={() => handleTodoCheck(todo.id)}
+                  >
+                      <div className="flex flex-row" >
+                        <input
+                          id={`todo ${todo.id}`} type="checkbox" className="appearance-none mt-1 mr-4 w-4 h-4 rounded-xl bg-[#3c1a7f] checked:bg-white ring-white ring-2 cursor-pointer"
+                          checked={todo.completed} 
+                          readOnly
+                        />
+                        <label className="cursor-pointer" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
+                      </div>
+                  </div>
+                  <div className="bg-[#3c1a7f] rounded-r-lg w-6 group-hover:bg-[#4A11B2] hover:text-red-500 cursor-pointer text-2xl font-bold flex h-[60px]" onClick={() => handleDeleteTodo(todo.id)}>
+                    x                 
+                  </div>
+                  
                 </div>
               );
             })
