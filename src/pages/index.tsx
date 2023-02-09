@@ -6,13 +6,12 @@ import { useState } from "react";
 import { api } from "../utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  //const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   let [todos, setTodos] = useState([{ id: 1, text: "todo 1", completed: false }, { id: 2, text: "todo 2", completed: false}]);
 
   const handleAddTodo = (e: any) => {
     e.preventDefault();
-    console.log(e.target.value)
     const newTodo = {
       id: todos.length + 1,
       text: e.target.elements.todoInput.value,
@@ -20,6 +19,11 @@ const Home: NextPage = () => {
     }
     setTodos([...todos, newTodo]);
     e.target.reset();
+  }
+
+  const handleDeleteTodo = (id: number) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
   }
 
   return (
@@ -50,7 +54,9 @@ const Home: NextPage = () => {
                       <input id={`todo ${todo.id}`} type="checkbox" className="appearance-none mt-1 mr-4 w-4 h-4 rounded-xl bg-[#3c1a7f] checked:bg-white ring-white ring-2 cursor-pointer "></input>
                       <label className="" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
                     </div>
-                    <span className="text-2xl font-bold hover:text-red-500 ">X</span>
+                    <span className="text-2xl font-bold hover:text-red-500" 
+                      onClick={() => handleDeleteTodo(todo.id)}
+                    >X</span>
                 </div>
               );
             })
