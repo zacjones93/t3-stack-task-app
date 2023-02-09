@@ -5,10 +5,58 @@ import { useState } from "react";
 
 import { api } from "../utils/api";
 
+let TodoInput = ({handleAddTodo}: {handleAddTodo: any}) => {
+  return (
+    <form className="w-full flex flex-row gap-4" onSubmit={handleAddTodo} >
+    <label htmlFor="todoInput" className="sr-only">Todo input</label>
+    <input id="todoInput" type="text" placeholder="What do you need to get done?" className="w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-lg shadow-md focus:outline-white" />
+
+    <input className="bg-white text-[#3c1a7f] shadow-md rounded px-6 text-lg font-semibold cursor-pointer hover:bg-[#3c1a7f] hover:text-white" type="submit" value="Submit" />
+  </form>
+  );
+}
+
+let ListOfTodos = ({todos, handleDeleteTodo, handleTodoCheck, title}: {todos: any, handleDeleteTodo: any, handleTodoCheck: any, title?: string}) => {
+  return (
+    <div className="container w-full">
+      {title && (<h2 className="self-start text-2xl text-white font-bold mb-4 ">{title}</h2>)}
+    <ul className=" flex flex-col">
+    {todos.map((todo: any) => {
+      return (
+        <li className="flex flex-row mb-4 group">
+          <div 
+          key={todo.id}
+          className="flex items-center justify-between w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-l-lg shadow-md cursor-pointer group-hover:bg-[#4A11B2]"
+          onClick={() => handleTodoCheck(todo.id)}
+          >
+              <div className="flex flex-row" >
+                <input
+                  id={`todo ${todo.id}`} type="checkbox" className="appearance-none mt-1 mr-4 w-4 h-4 rounded-xl bg-[#3c1a7f] checked:bg-white ring-white ring-2 cursor-pointer"
+                  checked={todo.completed} 
+                  readOnly
+                />
+                <label className="cursor-pointer" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
+              </div>
+          </div>
+          <div className="bg-[#3c1a7f] rounded-r-lg w-6 group-hover:bg-[#4A11B2] hover:text-red-500 cursor-pointer text-2xl font-bold flex h-[60px]" onClick={() => handleDeleteTodo(todo.id)}>
+            x                 
+          </div>
+          
+        </li>
+      );
+    })
+    }
+    </ul>
+  </div>
+  )
+}
+
 const Home: NextPage = () => {
   //const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   let [todos, setTodos] = useState([{ id: 1, text: "todo 1", completed: false }, { id: 2, text: "todo 2", completed: false}]);
+  let uncompletedTodos = todos.filter((todo) => todo.completed === false);
+  let completedTodos = todos.filter((todo) => todo.completed === true);
 
   const handleAddTodo = (e: any) => {
     e.preventDefault();
@@ -57,41 +105,22 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             TODOS
           </h1>
-          <form className="w-full flex flex-row gap-4" onSubmit={handleAddTodo} >
-            <label htmlFor="todoInput" className="sr-only">Todo input</label>
-            <input id="todoInput" type="text" placeholder="What do you need to get done?" className="w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-lg shadow-md focus:outline-white" />
-
-            <input className="bg-white text-[#3c1a7f] shadow-md rounded px-6 text-lg font-semibold cursor-pointer hover:bg-[#3c1a7f] hover:text-white" type="submit" value="Submit" />
-          </form>
+          <TodoInput handleAddTodo={handleAddTodo} />
           <hr className="border w-full opacity-50"></hr>
           <button className="bg-white text-lg font-semibold p-4 rounded-full self-start hover:bg-[#3c1a7f] hover:text-white" onClick={handleCompleteAllTodos} >Complete all</button>
-          <div className="container flex flex-col">
-            {todos.map((todo) => {
-              return (
-                <div className="flex flex-row mb-4 group">
-                  <div 
-                  key={todo.id}
-                  className="flex items-center justify-between w-full p-4 text-lg font-semibold text-white bg-[#3c1a7f] rounded-l-lg shadow-md cursor-pointer group-hover:bg-[#4A11B2]"
-                  onClick={() => handleTodoCheck(todo.id)}
-                  >
-                      <div className="flex flex-row" >
-                        <input
-                          id={`todo ${todo.id}`} type="checkbox" className="appearance-none mt-1 mr-4 w-4 h-4 rounded-xl bg-[#3c1a7f] checked:bg-white ring-white ring-2 cursor-pointer"
-                          checked={todo.completed} 
-                          readOnly
-                        />
-                        <label className="cursor-pointer" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
-                      </div>
-                  </div>
-                  <div className="bg-[#3c1a7f] rounded-r-lg w-6 group-hover:bg-[#4A11B2] hover:text-red-500 cursor-pointer text-2xl font-bold flex h-[60px]" onClick={() => handleDeleteTodo(todo.id)}>
-                    x                 
-                  </div>
-                  
-                </div>
-              );
-            })
-            }
-          </div>
+          {uncompletedTodos.length > 0 && <ListOfTodos 
+            todos={uncompletedTodos} 
+            handleDeleteTodo={handleDeleteTodo} 
+            handleTodoCheck={handleTodoCheck} 
+            title="Uncompleted Tasks"
+          />}
+          
+          {completedTodos.length > 0 && <ListOfTodos 
+            todos={completedTodos} 
+            handleDeleteTodo={handleDeleteTodo} 
+            handleTodoCheck={handleTodoCheck} 
+            title="Completed Tasks"
+          />}
         </div>
       </main>
     </>
