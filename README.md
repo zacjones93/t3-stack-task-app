@@ -1,4 +1,11 @@
-# Create T3 App
+# Task Management App
+
+This is a simple task management app built with the [T3 Stack](https://create.t3.gg/). It is a great starting point for learning T3 and building your own apps. 
+
+
+![screenshot](public/screenshot.png)
+
+## Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 

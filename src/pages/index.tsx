@@ -78,7 +78,7 @@ const ListOfTodos = (
         {todosToEdit && handleEditingTodos && editTodo && todosToEdit?.id === todo.id ? (
           <div className="flex flex-row mb-4 group content-center">
           <div 
-          className="flex items-center justify-between w-full p-4 text-lg font-semibold text-color-text bg-card-background rounded-l-lg  group-hover:bg-primary"
+          className="flex items-center justify-between w-full p-4 text-lg font-semibold text-color-text bg-card-background rounded-l-lg  "
           >
               <div className="flex flex-row w-full" >
                 <input
@@ -89,7 +89,7 @@ const ListOfTodos = (
                 <label className="cursor-text sr-only" htmlFor={`todo ${todo.id}`} />
                 <input
                   ref={editTodoRef}                  
-                  className=" bg-card-background ring-1 ring-primary rounded w-full focus:outline-primary focus:ring-2 focus:ring-primary text-color-text"
+                  className=" bg-card-background ring-1 ring-primary rounded w-full focus:outline-primary focus:ring-2 focus:ring-primary text-color-text pl-2"
                   type="text"
                   value={todo.text}
                   onChange={(e) => handleEditingTodos(todo.id, e.target.value)}
@@ -102,7 +102,7 @@ const ListOfTodos = (
               <p className="h-fit my-auto"><SaveIcon/></p>                 
             </div>
           )}
-          <div className="rounded-r-lg w-8 group-hover:bg-primary hover:text-color-subtext cursor-pointer text-2xl font-bold flex h-[60px] bg-card-background text-color-text" onClick={() => handleDeleteTodo(todo.id)}>
+          <div className="rounded-r-lg w-8  hover:text-color-subtext cursor-pointer text-2xl font-bold flex h-[60px] bg-card-background text-color-text" onClick={() => handleDeleteTodo(todo.id)}>
             <p className="h-fit my-auto"><TrashIcon/></p>                 
           </div>
         </div>
@@ -118,7 +118,7 @@ const ListOfTodos = (
                   checked={todo.completed} 
                   readOnly
                 />
-                <label className="cursor-text" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
+                <label className="cursor-text pl-2" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
               </div>
           </div>
           {!todo.completed && editTodo && (
