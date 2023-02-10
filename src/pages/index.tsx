@@ -4,6 +4,12 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { api } from "../utils/api";
 
+type Todo = {
+  id: number;
+  text: string;
+  completed: boolean;
+};
+
 let TrashIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
@@ -37,12 +43,30 @@ let TodoInput = ({handleAddTodo}: {handleAddTodo: any}) => {
   );
 }
 
-let ListOfTodos = ({todos, handleDeleteTodo, handleTodoCheck, editTodo, todosToEdit, handleEditingTodos, title}: {todos: any, handleDeleteTodo: any, handleTodoCheck: any, editTodo?: any, handleEditingTodos?: any, todosToEdit?: number[], title?: string}) => {
-  const editTodoRef = useRef(null);
+let ListOfTodos = (
+    {
+      todos, 
+      handleDeleteTodo, 
+      handleTodoCheck, 
+      editTodo, 
+      todosToEdit, 
+      handleEditingTodos, 
+      title}
+      : {
+        todos: Todo[], 
+        handleDeleteTodo: (id: number) => void, 
+        handleTodoCheck: (id: number) => void, 
+        editTodo?: (id: number) => void, 
+        handleEditingTodos?: (id: number, e: string) => void, 
+        todosToEdit?: Todo, 
+        title?: string
+      }
+) => {
+  const editTodoRef = useRef<HTMLInputElement>(null);
 
   const focusEditInput = () => {
     requestAnimationFrame(() => {
-      editTodoRef.current.focus();
+      if(editTodoRef.current !== null) editTodoRef.current.focus();
     }); 
   }
 
@@ -53,7 +77,7 @@ let ListOfTodos = ({todos, handleDeleteTodo, handleTodoCheck, editTodo, todosToE
     {todos.map((todo: any) => {
       return (
         <>
-        {todosToEdit && todosToEdit?.id === todo.id ? (
+        {todosToEdit && handleEditingTodos && editTodo && todosToEdit?.id === todo.id ? (
           <li className="flex flex-row mb-4 group content-center">
           <div 
           key={todo.id}
@@ -101,7 +125,7 @@ let ListOfTodos = ({todos, handleDeleteTodo, handleTodoCheck, editTodo, todosToE
                 <label className="cursor-text" htmlFor={`todo ${todo.id}`}>{todo.text}</label>
               </div>
           </div>
-          {!todo.completed && (
+          {!todo.completed && editTodo && (
             <div 
               className="w-8 group-hover:bg-primary hover:text-color-subtext cursor-pointer text-2xl font-bold flex h-[60px] bg-card-background text-color-text" 
               onClick={() => {
@@ -135,11 +159,11 @@ let ListActionButton = ({onClick, title}: {onClick: any, title: string}) => {
 const Home: NextPage = () => {
   //const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
-  let [todos, setTodos] = useState([{ id: 1, text: "todo 1", completed: false }, { id: 2, text: "todo 2", completed: false}]);
+  let [todos, setTodos] = useState<Todo[]>([{ id: 1, text: "todo 1", completed: false }, { id: 2, text: "todo 2", completed: false}]);
   let uncompletedTodos = todos.filter((todo) => todo.completed === false);
   let completedTodos = todos.filter((todo) => todo.completed === true);
 
-  let [todosToEdit, setTodoToEdit] = useState(null);
+  let [todosToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
 
   const handleAddTodo = (e: any) => {
     e.preventDefault();
@@ -182,19 +206,19 @@ const Home: NextPage = () => {
   }
 
   const handleEditingTodos = (id: number, text: string) => {
-    let todoToEdit = todos.find((todo) => todo.id === id);
+    let todoToEdit = todos.find((todo) => todo.id === id) as Todo
     let remainingTodos = todos.filter((todo) => todo.id !== id);
     todoToEdit.text = text;
     setTodos([...remainingTodos, todoToEdit].sort((a, b) => a.id - b.id));
   }
 
   const editTodo = (id: number) => {
-    if ( todosToEdit && todosToEdit.id !== id) return
+    if (todosToEdit && todosToEdit?.id !== id) return
 
     if (!todosToEdit) {
       setTodoToEdit(todos.find((todo) => todo.id === id));
     } else {
-      setTodoToEdit(null);
+      setTodoToEdit(undefined);
     }
   }
 
