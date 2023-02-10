@@ -10,7 +10,7 @@ type Todo = {
   completed: boolean;
 };
 
-let TrashIcon = () => {
+const TrashIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
       <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -18,21 +18,21 @@ let TrashIcon = () => {
   )
 }
 
-let EditIcon = () => {
+const EditIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
   <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
 </svg>
   )}
 
-let SaveIcon = () => {
+const SaveIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   )}
 
-let TodoInput = ({handleAddTodo}: {handleAddTodo: () => void}) => {
+const TodoInput = ({handleAddTodo}: {handleAddTodo: () => void}) => {
   return (
     <form className="w-full flex flex-row gap-4" onSubmit={handleAddTodo} >
     <label htmlFor="todoInput" className="sr-only">Todo input</label>
@@ -43,7 +43,7 @@ let TodoInput = ({handleAddTodo}: {handleAddTodo: () => void}) => {
   );
 }
 
-let ListOfTodos = (
+const ListOfTodos = (
     {
       todos, 
       handleDeleteTodo, 
@@ -76,11 +76,10 @@ let ListOfTodos = (
     <ul className=" flex flex-col">
     {todos.map((todo: any) => {
       return (
-        <>
+        <li key={todo.id}>
         {todosToEdit && handleEditingTodos && editTodo && todosToEdit?.id === todo.id ? (
-          <li className="flex flex-row mb-4 group content-center">
+          <div className="flex flex-row mb-4 group content-center">
           <div 
-          key={todo.id}
           className="flex items-center justify-between w-full p-4 text-lg font-semibold text-color-text bg-card-background rounded-l-lg  group-hover:bg-primary"
           >
               <div className="flex flex-row w-full" >
@@ -108,11 +107,10 @@ let ListOfTodos = (
           <div className="rounded-r-lg w-8 group-hover:bg-primary hover:text-color-subtext cursor-pointer text-2xl font-bold flex h-[60px] bg-card-background text-color-text" onClick={() => handleDeleteTodo(todo.id)}>
             <p className="h-fit my-auto"><TrashIcon/></p>                 
           </div>
-        </li>
+        </div>
         ) : ( 
-          <li className="flex flex-row mb-4 group content-center">
+          <div key={todo.id} className="flex flex-row mb-4 group content-center">
           <div 
-          key={todo.id}
           className="flex items-center justify-between w-full p-4 text-lg font-semibold text-color-text bg-card-background rounded-l-lg cursor-pointer group-hover:bg-primary"
           onClick={() => handleTodoCheck(todo.id)}
           >
@@ -138,10 +136,10 @@ let ListOfTodos = (
           <div className="rounded-r-lg w-8 group-hover:bg-primary hover:text-color-subtext cursor-pointer text-2xl font-bold flex h-[60px] bg-card-background text-color-text" onClick={() => handleDeleteTodo(todo.id)}>
             <p className="h-fit my-auto"><TrashIcon/></p>                 
           </div>
-        </li>
+        </div>
           )
         }
-        </>
+        </li>
       );
     })
     }
@@ -150,7 +148,7 @@ let ListOfTodos = (
   )
 }
 
-let ListActionButton = ({onClick, title}: {onClick: any, title: string}) => {
+const ListActionButton = ({onClick, title}: {onClick: any, title: string}) => {
   return (
     <button className=" bg-card-background text-lg font-semibold p-4 rounded-full self-start hover:bg-primary text-color-text" onClick={onClick} >{title}</button>
   );
@@ -159,16 +157,14 @@ let ListActionButton = ({onClick, title}: {onClick: any, title: string}) => {
 const Home: NextPage = () => {
   //const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
-  let [todos, setTodos] = useState<Todo[]>([{ id: 1, text: "todo 1", completed: false }, { id: 2, text: "todo 2", completed: false}]);
-  let uncompletedTodos = todos.filter((todo) => todo.completed === false);
-  let completedTodos = todos.filter((todo) => todo.completed === true);
+  const [todos, setTodos] = useState<Todo[]>([{ id: 1, text: "todo 1", completed: false }, { id: 2, text: "todo 2", completed: false}]);
+  const uncompletedTodos = todos.filter((todo) => todo.completed === false);
+  const completedTodos = todos.filter((todo) => todo.completed === true);
 
-  let [todosToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
+  const [todosToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
 
   const handleAddTodo = (e: React.FormEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    console.table(e.target)
-    
+    e.preventDefault();   
     const newTodo = {
       id: todos.length + 1,
       // @ts-ignore
@@ -186,7 +182,6 @@ const Home: NextPage = () => {
   }
 
   const handleTodoCheck = (id: number) => {
-    console.log(id)
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
         todo.completed = !todo.completed;
@@ -210,8 +205,8 @@ const Home: NextPage = () => {
   }
 
   const handleEditingTodos = (id: number, text: string) => {
-    let todoToEdit = todos.find((todo) => todo.id === id) as Todo
-    let remainingTodos = todos.filter((todo) => todo.id !== id);
+    const todoToEdit = todos.find((todo) => todo.id === id) as Todo
+    const remainingTodos = todos.filter((todo) => todo.id !== id);
     todoToEdit.text = text;
     setTodos([...remainingTodos, todoToEdit].sort((a, b) => a.id - b.id));
   }
