@@ -32,7 +32,7 @@ let SaveIcon = () => {
     </svg>
   )}
 
-let TodoInput = ({handleAddTodo}: {handleAddTodo: any}) => {
+let TodoInput = ({handleAddTodo}: {handleAddTodo: () => void}) => {
   return (
     <form className="w-full flex flex-row gap-4" onSubmit={handleAddTodo} >
     <label htmlFor="todoInput" className="sr-only">Todo input</label>
@@ -165,14 +165,18 @@ const Home: NextPage = () => {
 
   let [todosToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
 
-  const handleAddTodo = (e: any) => {
+  const handleAddTodo = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
+    console.table(e.target)
+    
     const newTodo = {
       id: todos.length + 1,
+      // @ts-ignore
       text: e.target.elements.todoInput.value,
       completed: false
     }
     setTodos([...todos, newTodo]);
+      // @ts-ignore
     e.target.reset();
   }
 
@@ -235,7 +239,7 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-color-text sm:text-[5rem]">
             Task Tracker
           </h1>
-          <TodoInput handleAddTodo={handleAddTodo} />
+          <TodoInput handleAddTodo={handleAddTodo as () => void} />
           <div className="flex flex-row gap-2 flex-start w-full">
             <ListActionButton onClick={handleCompleteAllTodos} title="Complete All" />
             <ListActionButton onClick={clearAllCompletedTodos} title="Clear Completed" />
