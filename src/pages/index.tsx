@@ -1,8 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRef, useState } from "react";
-import { api } from "../utils/api";
 
 type Todo = {
   id: number;
@@ -74,7 +72,7 @@ const ListOfTodos = (
     <div className="container w-full">
       {title && (<h2 className="self-start text-2xl text-color-text font-bold mb-4 ">{title}</h2>)}
     <ul className=" flex flex-col">
-    {todos.map((todo: any) => {
+    {todos.map((todo: Todo) => {
       return (
         <li key={todo.id}>
         {todosToEdit && handleEditingTodos && editTodo && todosToEdit?.id === todo.id ? (
@@ -148,7 +146,7 @@ const ListOfTodos = (
   )
 }
 
-const ListActionButton = ({onClick, title}: {onClick: any, title: string}) => {
+const ListActionButton = ({onClick, title}: {onClick: () => void, title: string}) => {
   return (
     <button className=" bg-card-background text-lg font-semibold p-4 rounded-full self-start hover:bg-primary text-color-text" onClick={onClick} >{title}</button>
   );
@@ -164,15 +162,17 @@ const Home: NextPage = () => {
   const [todosToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
 
   const handleAddTodo = (e: React.FormEvent<HTMLInputElement>) => {
-    e.preventDefault();   
+    e.preventDefault();  
     const newTodo = {
       id: todos.length + 1,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       text: e.target.elements.todoInput.value,
       completed: false
     }
     setTodos([...todos, newTodo]);
-      // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     e.target.reset();
   }
 
